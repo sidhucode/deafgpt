@@ -1,0 +1,5 @@
+fastapi[standard]~=0.103.0
+pillow~=10.4.0
+moviepy~=2.1.2
+uvicorn~=0.22.0
+fastapi
