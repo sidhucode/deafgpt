@@ -101,7 +101,10 @@ def generate_video(text: str):
         raise HTTPException(status_code=400, detail="Could not generate ASL images.")
 
     video_file = create_asl_video(asl_images, VIDEO_PATH, frame_rate=2, letter_duration=2)
+    if not os.path.exists(video_file):
+        raise HTTPException(status_code=500, detail="Video creation failed.")
     upload_result = cloudinary.uploader.upload(video_file, public_id = "final_video")
+    print(upload_result)
     print(upload_result["secure_url"])
     return {"video_url": f"{upload_result['secure_url']}"}
 
