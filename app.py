@@ -3,6 +3,18 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from PIL import Image
 from moviepy import ImageSequenceClip
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
+
+# Configuration
+cloudinary.config(
+    cloud_name = "di5dyxah8",
+    api_key = "864387388349832",
+    api_secret = "ISYTE4Im_IYHWFjiJ9SpZPqOJko", # Click 'View API Keys' above to copy your API secret
+    secure=True
+)
+
 
 app = FastAPI()
 
@@ -89,7 +101,9 @@ def generate_video(text: str):
         raise HTTPException(status_code=400, detail="Could not generate ASL images.")
 
     video_file = create_asl_video(asl_images, VIDEO_PATH, frame_rate=2, letter_duration=2)
-    return {"video_url": f"/download/{video_file}"}
+    upload_result = cloudinary.uploader.upload(video_file, public_id = "final_video")
+    print(upload_result["secure_url"])
+    return {"video_url": f"{upload_result['secure_url']}"}
 
 
 @app.get("/download/{filename}")
