@@ -103,10 +103,13 @@ def generate_video(text: str):
     video_file = create_asl_video(asl_images, VIDEO_PATH, frame_rate=2, letter_duration=2)
     if not os.path.exists(video_file):
         raise HTTPException(status_code=500, detail="Video creation failed.")
-    upload_result = cloudinary.uploader.upload(video_file, public_id = "final_video")
-    print(upload_result)
-    print(upload_result["secure_url"])
-    return {"video_url": f"{upload_result['secure_url']}"}
+    response = cloudinary.uploader.upload(
+        video_file,
+        resource_type="video"
+    )
+
+    print(response["secure_url"])  # Get the video URL
+    return {"video_url": f"{response['secure_url']}"}
 
 
 @app.get("/download/{filename}")
